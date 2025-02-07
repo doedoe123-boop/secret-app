@@ -50,12 +50,25 @@ export default async function AuthButton() {
   }
   return user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
-      <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
+      {/* Navigation Links */}
+      <nav className="flex gap-3">
+        <Link href="/protected/secret-1" className="inline-block py-2 px-4 text-black dark:text-white">
+          Secret Page 1
+        </Link>
+        <Link href="/protected/secret-2" className="inline-block py-2 px-4 text-black dark:text-white">
+          Secret Page 2
+        </Link>
+        <Link href="/protected/secret-3" className="inline-block py-2 px-4 text-black dark:text-white">
+          Secret Page 3
+        </Link>
+      </nav>
+
+      {/* Sign Out Button */}
+      {/* <form action={signOutAction}>
+        <Button type="submit" variant="outline">
           Sign out
         </Button>
-      </form>
+      </form> */}
     </div>
   ) : (
     <div className="flex gap-2">
