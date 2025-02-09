@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 
-export default function SecretPage3({ userId }: { userId: string }) {
+export default function SecretPage3() {
   const supabase = createClient();
   const [users, setUsers] = useState<any[]>([]);
   const [friends, setFriends] = useState<any[]>([]);
@@ -116,7 +116,7 @@ export default function SecretPage3({ userId }: { userId: string }) {
     }
 
     fetchData();
-  }, [userId]);
+  });
 
   async function fetchSecretMessage(friendId: string) {
     const isFriend = friends.some((friend) => friend.friend_id === friendId);
