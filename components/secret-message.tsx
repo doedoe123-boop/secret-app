@@ -36,7 +36,6 @@ export default function SecretMessageForm({ userId, allowDelete }: { userId: str
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If a message already exists, prevent adding another one
     if (messages.length > 0 && !editingId) {
       alert("You can only have one secret message.");
       return;

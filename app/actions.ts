@@ -4,6 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { deleteUserAccount } from "@/utils/supabase/delete";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -132,3 +133,26 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const deleteUserAction = async () => {
+  const supabase = await createClient();
+  
+  const { data: { user }, error } = await supabase.auth.getUser();
+  
+  if (error || !user) {
+    throw new Error("Failed to retrieve user.");
+  }
+
+  try {
+    await deleteUserAccount(user.id);
+    
+    // Sign out after deleting
+    await supabase.auth.signOut();
+
+    return { success: true }; // Instead of calling router, return success
+  } catch (err) {
+    throw new Error("Failed to delete user account: " + err.message);
+  }
+};
+
+

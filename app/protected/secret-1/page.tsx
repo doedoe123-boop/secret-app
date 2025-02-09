@@ -1,18 +1,44 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useState, useEffect, useTransition } from "react";
+import { createClient } from "@/utils/supabase/client"; 
 import { Button } from "../../../components/ui/button";
 import UpdateProfile from "@/components/update-profile";
 import SecretMessageForm from "@/components/secret-message";
+import { signOutAction, deleteUserAction } from "@/app/actions";
+import { useRouter } from "next/navigation";
 
-export default async function SecretPage1() {
-  const supabase = await createClient();
+export default function SecretPage1() {
+  const [isPending, startTransition] = useTransition();
+  const [user, setUser] = useState(null);
+  const router = useRouter();
   
-  // Fetch the current authenticated user
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  // If no user is authenticated, redirect to sign-in page
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchUser() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      
+      if (error) {
+        console.error("Error fetching user:", error.message);
+        // Redirect or handle the error appropriately if no user is found
+        return;
+      }
+      
+      if (user) {
+        setUser(user);
+      } else {
+        // Redirect to the sign-in page if no user is authenticated
+        router.push("/sign-in");
+      }
+    }
+
+    fetchUser();
+  }, [supabase, router]);
+
+  // If user is not loaded, we can render a loading state
   if (!user) {
-    return redirect("/sign-in");
+    return <div>Loading...</div>;
   }
 
   return (
@@ -25,6 +51,31 @@ export default async function SecretPage1() {
 
       {/* Secret message */}
       <SecretMessageForm userId={user.id} allowDelete={false} />
+
+      {/* Delete Account Button */}
+      <Button 
+        onClick={() => {
+          if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+            startTransition(async () => {
+              const result = await deleteUserAction();
+              if (result.success) {
+                router.push("/");
+              }
+            });
+          }
+        }}
+        variant="destructive" 
+        disabled={isPending}
+      >
+        {isPending ? "Deleting..." : "Delete Account"}
+      </Button>
+
+      {/* Sign Out Button */}
+      <form action={signOutAction}>
+        <Button type="submit" variant="outline">
+          Sign out
+        </Button>
+      </form>
     </div>
   );
 }
