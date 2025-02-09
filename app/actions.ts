@@ -149,7 +149,7 @@ export const deleteUserAction = async () => {
     // Sign out after deleting
     await supabase.auth.signOut();
 
-    return { success: true }; // Instead of calling router, return success
+    return { success: true }; 
   } catch (err) {
     throw new Error("Failed to delete user account: " + err.message);
   }

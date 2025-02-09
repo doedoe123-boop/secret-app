@@ -119,7 +119,6 @@ export default function SecretPage3({ userId }: { userId: string }) {
   }, [userId]);
 
   async function fetchSecretMessage(friendId: string) {
-    // Check if you're friends
     const isFriend = friends.some((friend) => friend.friend_id === friendId);
   
     if (!isFriend) {

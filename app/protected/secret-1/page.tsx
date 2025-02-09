@@ -21,14 +21,12 @@ export default function SecretPage1() {
       
       if (error) {
         console.error("Error fetching user:", error.message);
-        // Redirect or handle the error appropriately if no user is found
         return;
       }
       
       if (user) {
         setUser(user);
       } else {
-        // Redirect to the sign-in page if no user is authenticated
         router.push("/sign-in");
       }
     }
@@ -36,7 +34,6 @@ export default function SecretPage1() {
     fetchUser();
   }, [supabase, router]);
 
-  // If user is not loaded, we can render a loading state
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -67,7 +64,7 @@ export default function SecretPage1() {
         variant="destructive" 
         disabled={isPending}
       >
-        {isPending ? "Deleting..." : "Delete Account"}
+        {isPending ? "Deleting your account..." : "Delete Account"}
       </Button>
 
       {/* Sign Out Button */}

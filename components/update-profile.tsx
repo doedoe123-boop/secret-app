@@ -1,4 +1,4 @@
-"use client"; // Mark as client-side component
+"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 
 export default function UpdateProfile({ userId }: { userId: string }) {
   const supabase = createClient();
-  const [email, setEmail] = useState<string | null>(null); // State to store email
+  const [email, setEmail] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Track if the user is editing their profile
-  const [errorMessage, setErrorMessage] = useState(""); // To display validation error messages
+  const [isEditing, setIsEditing] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function fetchProfile() {
@@ -30,7 +30,6 @@ export default function UpdateProfile({ userId }: { userId: string }) {
         .eq("user_id", userId)
         .single();
 
-      // If no profile is found, we handle it by setting default values
       if (error) {
         if (error.code === "PGRST116" || error.message.includes("No rows returned")) {
           // No profile found, allow user to fill in data
@@ -50,7 +49,7 @@ export default function UpdateProfile({ userId }: { userId: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear previous error message
+    setErrorMessage(""); 
     setLoading(true);
 
     // Validate the input before submitting
@@ -73,7 +72,7 @@ export default function UpdateProfile({ userId }: { userId: string }) {
       alert("Error updating profile: " + error.message);
     } else {
       alert("Profile updated successfully!");
-      setIsEditing(false); // Stop editing after successful update
+      setIsEditing(false); 
     }
   };
 
@@ -105,7 +104,7 @@ export default function UpdateProfile({ userId }: { userId: string }) {
             />
           </div>
           {errorMessage && (
-            <div className="text-red-500 mb-4 text-sm">{errorMessage}</div> // Display error message
+            <div className="text-red-500 mb-4 text-sm">{errorMessage}</div>
           )}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Updating..." : "Update Profile"}
