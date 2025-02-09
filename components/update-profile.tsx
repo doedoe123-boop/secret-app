@@ -62,7 +62,7 @@ export default function UpdateProfile({ userId }: { userId: string }) {
     const { error } = await supabase
       .from("profiles")
       .upsert([{ user_id: userId, display_name: displayName, bio }], {
-        onConflict: ["user_id"],
+        onConflict: "user_id",
       });
 
     setLoading(false);

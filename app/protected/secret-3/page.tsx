@@ -226,7 +226,7 @@ export default function SecretPage3() {
             const initials = user.display_name
               ? user.display_name
                   .split(" ")
-                  .map((word) => word[0])
+                  .map((word: string) => word[0])
                   .join("")
                   .toUpperCase()
               : "?";

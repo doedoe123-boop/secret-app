@@ -151,8 +151,8 @@ export const deleteUserAction = async () => {
 
     return { success: true }; 
   } catch (err) {
-    throw new Error("Failed to delete user account: " + err.message);
-  }
+    throw new Error("Failed to delete user account: " + (err as Error).message);
+  }  
 };
 
 

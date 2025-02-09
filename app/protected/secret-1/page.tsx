@@ -7,10 +7,11 @@ import UpdateProfile from "@/components/update-profile";
 import SecretMessageForm from "@/components/secret-message";
 import { signOutAction, deleteUserAction } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 
 export default function SecretPage1() {
   const [isPending, startTransition] = useTransition();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   
   const supabase = createClient();
