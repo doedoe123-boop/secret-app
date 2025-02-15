@@ -5,8 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function Login({ searchParams }: { searchParams?: Record<string, string | undefined> }) {  
-  const errorMessage = searchParams?.error;  
+interface SignInPageProps {
+  searchParams: Record<string, string | undefined>;
+}
+
+export default function Login({ searchParams }: SignInPageProps) {
+  const errorMessage = searchParams?.error;
+
   return (
     <form className="flex-1 flex flex-col min-w-64">
       <h1 className="text-2xl font-medium">Sign in</h1>
