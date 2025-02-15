@@ -3,7 +3,12 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import Login from "../app/(auth-pages)/sign-in/page";
 
-// Mock the signInAction with a redirect response
+// Mock the useSearchParams hook
+jest.mock("next/navigation", () => ({
+  useSearchParams: jest.fn(),
+}));
+
+// Mock the signInAction
 jest.mock("../app/actions", () => ({
   signInAction: jest.fn().mockImplementation(() => {
     return Promise.resolve(new Response(null, {
@@ -13,26 +18,38 @@ jest.mock("../app/actions", () => ({
   }),
 }));
 
-// Mock searchParams as a **plain object** (not a Promise)
-const mockSearchParams = { error: "Invalid credentials" };
+describe("Login Component", () => {
+  beforeEach(() => {
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+  });
 
-test("User can type email and password", async () => {
-  render(<Login searchParams={{}} />); // ✅ No Promise needed
+  test("User can type email and password", async () => {
+    // Mock useSearchParams to return no error
+    require("next/navigation").useSearchParams.mockReturnValue(new URLSearchParams());
 
-  const emailInput = screen.getByLabelText(/email/i);
-  const passwordInput = screen.getByLabelText(/password/i);
+    render(<Login />);
 
-  await userEvent.type(emailInput, "testuser@example.com");
-  await userEvent.type(passwordInput, "password123");
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
 
-  expect(emailInput).toHaveValue("testuser@example.com");
-  expect(passwordInput).toHaveValue("password123");
-});
+    await userEvent.type(emailInput, "testuser@example.com");
+    await userEvent.type(passwordInput, "password123");
 
-test("Shows error message on invalid login", async () => {
-  render(<Login searchParams={mockSearchParams} />); // ✅ No Promise needed
+    expect(emailInput).toHaveValue("testuser@example.com");
+    expect(passwordInput).toHaveValue("password123");
+  });
 
-  // Check for the error message
-  const errorMessage = await screen.findByText(/invalid credentials/i);
-  expect(errorMessage).toBeInTheDocument();
+  test("Shows error message on invalid login", async () => {
+    // Mock useSearchParams to return an error
+    require("next/navigation").useSearchParams.mockReturnValue(
+      new URLSearchParams({ error: "Invalid credentials" })
+    );
+
+    render(<Login />);
+
+    // Check the error message
+    const errorMessage = await screen.findByText(/invalid credentials/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 });

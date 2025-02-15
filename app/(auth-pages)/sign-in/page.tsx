@@ -1,3 +1,7 @@
+"use client"; 
+
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { signInAction } from "@/app/actions";
 import { FormMessage } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -5,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function Login({ searchParams }: { searchParams: { error?: string } }) {
-  const errorMessage = searchParams?.error;
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const errorMessage = searchParams?.get("error");
 
   return (
     <form className="flex-1 flex flex-col min-w-64">
@@ -42,5 +47,13 @@ export default function Login({ searchParams }: { searchParams: { error?: string
         {errorMessage && <FormMessage message={{ error: errorMessage }} />}
       </div>
     </form>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
