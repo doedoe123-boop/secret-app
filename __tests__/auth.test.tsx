@@ -13,11 +13,11 @@ jest.mock("../app/actions", () => ({
   }),
 }));
 
-// Mock the searchParams for failed login attempts
+// Mock searchParams as a **plain object** (not a Promise)
 const mockSearchParams = { error: "Invalid credentials" };
 
 test("User can type email and password", async () => {
-  render(<Login searchParams={{}} />);
+  render(<Login searchParams={{}} />); // ✅ No Promise needed
 
   const emailInput = screen.getByLabelText(/email/i);
   const passwordInput = screen.getByLabelText(/password/i);
@@ -30,7 +30,7 @@ test("User can type email and password", async () => {
 });
 
 test("Shows error message on invalid login", async () => {
-  render(<Login searchParams={mockSearchParams} />);
+  render(<Login searchParams={mockSearchParams} />); // ✅ No Promise needed
 
   // Check for the error message
   const errorMessage = await screen.findByText(/invalid credentials/i);
