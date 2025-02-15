@@ -5,12 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-interface SignInPageProps {
-  searchParams?: { error?: string }; 
-}
-
-export default function Login({ searchParams }: SignInPageProps) {
-  const errorMessage = searchParams?.error;
+export default async function Login({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const { error } = await searchParams;
 
   return (
     <form className="flex-1 flex flex-col min-w-64">
@@ -43,7 +39,7 @@ export default function Login({ searchParams }: SignInPageProps) {
         <SubmitButton pendingText="Signing In..." formAction={signInAction}>
           Sign in
         </SubmitButton>
-        {errorMessage && <FormMessage message={{ error: errorMessage }} />}
+        {error && <FormMessage message={{ error }} />}
       </div>
     </form>
   );
